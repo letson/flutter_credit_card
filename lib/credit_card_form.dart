@@ -127,7 +127,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
         child: Row(
           children: <Widget>[
             Container(
-              width: 200,
+              width: 300,
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               margin: const EdgeInsets.only(left: 16, top: 16, right: 16),
               child: TextFormField(
@@ -146,7 +146,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
               ),
             ),
             Container(
-              width: 100,
+              width: 150,
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               margin: const EdgeInsets.only(left: 16, top: 8, right: 16),
               child: TextFormField(
@@ -164,7 +164,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
               ),
             ),
             Container(
-              width: 50,
+              width: 100,
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               margin: const EdgeInsets.only(left: 16, top: 8, right: 16),
               child: TextField(
@@ -189,7 +189,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
               ),
             ),
             Container(
-              width: 200,
+              width: 300,
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               margin: const EdgeInsets.only(left: 16, top: 8, right: 16),
               child: TextFormField(
