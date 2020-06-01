@@ -19,6 +19,7 @@ class CreditCardForm extends StatefulWidget {
     this.themeColor,
     this.textColor = Colors.black,
     this.cursorColor,
+    this.onInfoCompleted,
   }) : super(key: key);
 
   final String cardNumber;
@@ -29,6 +30,7 @@ class CreditCardForm extends StatefulWidget {
   final Color themeColor;
   final Color textColor;
   final Color cursorColor;
+  final VoidCallback onInfoCompleted;
 
   @override
   _CreditCardFormState createState() => _CreditCardFormState();
@@ -136,11 +138,13 @@ class _CreditCardFormState extends State<CreditCardForm> {
       setState(() {
         _autoValidate = true; // Start validating on every change.
       });
-      _showInSnackBar('Please fix the errors in red before submitting.');
+      //_showInSnackBar('Please fix the errors in red before submitting.');
     } else {
-      form.save();
+      widget.onInfoCompleted();
+      //form.save();
       // Encrypt and send send payment details to payment gateway
-      _showInSnackBar('Payment card is valid');
+      //_showInSnackBar('Payment card is valid');
+
     }
   }
 
@@ -231,6 +235,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 style: TextStyle(
                   color: widget.textColor,
                 ),
+                textCapitalization: TextCapitalization.words,
                 validator: (String value) =>
                     value.isEmpty ? Resources.fieldReq : null,
                 decoration: InputDecoration(
