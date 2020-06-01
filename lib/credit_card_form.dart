@@ -1,4 +1,3 @@
-import 'dart:html';
 import 'dart:io' as platform;
 
 import 'package:flutter/cupertino.dart';
