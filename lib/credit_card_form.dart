@@ -1,6 +1,13 @@
+import 'dart:html';
+import 'dart:io' as platform;
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
+import 'package:flutter_credit_card/payment_card.dart';
+import 'package:flutter_credit_card/resources.dart';
 
 import 'credit_card_model.dart';
 
@@ -31,6 +38,10 @@ class CreditCardForm extends StatefulWidget {
 }
 
 class _CreditCardFormState extends State<CreditCardForm> {
+  var _formKey = new GlobalKey<FormState>();
+  var numberController = new TextEditingController();
+  var _autoValidate = false;
+
   String cardNumber;
   String expiryDate;
   String cardHolderName;
@@ -70,7 +81,6 @@ class _CreditCardFormState extends State<CreditCardForm> {
   @override
   void initState() {
     super.initState();
-
     createCreditCardModel();
 
     onCreditCardModelChange = widget.onCreditCardModelChange;
@@ -116,6 +126,55 @@ class _CreditCardFormState extends State<CreditCardForm> {
     super.didChangeDependencies();
   }
 
+  void _showInSnackBar(String value) {
+    new SnackBar(
+      content: new Text(value),
+      duration: new Duration(seconds: 3),
+    );
+  }
+
+  void _validateInputs() {
+    final FormState form = _formKey.currentState;
+    if (!form.validate()) {
+      setState(() {
+        _autoValidate = true; // Start validating on every change.
+      });
+      _showInSnackBar('Please fix the errors in red before submitting.');
+    } else {
+      form.save();
+      // Encrypt and send send payment details to payment gateway
+      _showInSnackBar('Payment card is valid');
+    }
+  }
+
+  Widget _getPayButton() {
+    if (platform.Platform.isIOS) {
+      return new CupertinoButton(
+        onPressed: _validateInputs,
+        color: CupertinoColors.activeBlue,
+        child: const Text(
+          Resources.pay,
+          style: const TextStyle(fontSize: 17.0),
+        ),
+      );
+    } else {
+      return new RaisedButton(
+        onPressed: _validateInputs,
+        color: Colors.deepOrangeAccent,
+        splashColor: Colors.deepPurple,
+        shape: RoundedRectangleBorder(
+          borderRadius: const BorderRadius.all(const Radius.circular(100.0)),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 80.0),
+        textColor: Colors.white,
+        child: new Text(
+          Resources.pay.toUpperCase(),
+          style: const TextStyle(fontSize: 17.0),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -124,6 +183,8 @@ class _CreditCardFormState extends State<CreditCardForm> {
         primaryColorDark: themeColor,
       ),
       child: Form(
+        key: _formKey,
+        autovalidate: _autoValidate,
         child: Row(
           children: <Widget>[
             Container(
@@ -136,6 +197,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 style: TextStyle(
                   color: widget.textColor,
                 ),
+                validator: CardUtils.validateCardNum,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Card number',
@@ -152,6 +214,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
               child: TextFormField(
                 controller: _expiryDateController,
                 cursorColor: widget.cursorColor ?? themeColor,
+                validator: CardUtils.validateDate,
                 style: TextStyle(
                   color: widget.textColor,
                 ),
@@ -167,13 +230,14 @@ class _CreditCardFormState extends State<CreditCardForm> {
               width: 100,
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               margin: const EdgeInsets.only(left: 16, top: 8, right: 16),
-              child: TextField(
+              child: TextFormField(
                 focusNode: cvvFocusNode,
                 controller: _cvvCodeController,
                 cursorColor: widget.cursorColor ?? themeColor,
                 style: TextStyle(
                   color: widget.textColor,
                 ),
+                validator: CardUtils.validateCVV,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'CVV',
@@ -198,14 +262,20 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 style: TextStyle(
                   color: widget.textColor,
                 ),
+                validator: (String value) =>
+                    value.isEmpty ? Resources.fieldReq : null,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Card Holder',
+                  labelText: 'Card Holder Name',
                 ),
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
               ),
             ),
+            new Container(
+              alignment: Alignment.center,
+              child: _getPayButton(),
+            )
           ],
         ),
       ),
