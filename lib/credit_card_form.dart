@@ -1,5 +1,3 @@
-import 'dart:io' as platform;
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -146,34 +144,6 @@ class _CreditCardFormState extends State<CreditCardForm> {
     }
   }
 
-  Widget _getPayButton() {
-    if (platform.Platform.isIOS) {
-      return new CupertinoButton(
-        onPressed: _validateInputs,
-        color: CupertinoColors.activeBlue,
-        child: const Text(
-          Resources.pay,
-          style: const TextStyle(fontSize: 17.0),
-        ),
-      );
-    } else {
-      return new RaisedButton(
-        onPressed: _validateInputs,
-        color: Colors.deepOrangeAccent,
-        splashColor: Colors.deepPurple,
-        shape: RoundedRectangleBorder(
-          borderRadius: const BorderRadius.all(const Radius.circular(100.0)),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 80.0),
-        textColor: Colors.white,
-        child: new Text(
-          Resources.pay.toUpperCase(),
-          style: const TextStyle(fontSize: 17.0),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -271,10 +241,21 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 textInputAction: TextInputAction.next,
               ),
             ),
-            new Container(
-              alignment: Alignment.center,
-              child: _getPayButton(),
-            )
+            Expanded(
+                child: Container(
+              height: 60,
+              margin: const EdgeInsets.only(left: 16, top: 8, right: 16),
+              child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(4.0)),
+                  color: Colors.red,
+                  onPressed: _validateInputs,
+                  textColor: Colors.white,
+                  child: new Text(
+                    'Next'.toUpperCase(),
+                    style: const TextStyle(fontSize: 17.0),
+                  )),
+            ))
           ],
         ),
       ),
