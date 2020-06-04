@@ -58,7 +58,8 @@ class CardUtils {
       return 'Expiry month is invalid';
     }
 
-    if ((year < 1) || (year > 2099)) {
+    var fourDigitsYear = convertYearTo4Digits(year);
+    if ((fourDigitsYear < 1) || (fourDigitsYear > 2099)) {
       // We are assuming a valid should be between 1 and 2099.
       // Note that, it's valid doesn't mean that it has not expired.
       return 'Expiry year is invalid';
@@ -68,6 +69,17 @@ class CardUtils {
       return "Card has expired";
     }
     return null;
+  }
+
+  /// Convert the two-digit year to four-digit year if necessary
+  static int convertYearTo4Digits(int year) {
+    if (year < 100 && year >= 0) {
+      var now = DateTime.now();
+      String currentYear = now.year.toString();
+      String prefix = currentYear.substring(0, currentYear.length - 2);
+      year = int.parse('$prefix${year.toString().padLeft(2, '0')}');
+    }
+    return year;
   }
 
   static bool hasDateExpired(int month, int year) {

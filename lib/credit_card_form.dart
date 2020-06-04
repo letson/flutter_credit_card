@@ -54,7 +54,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
   final MaskedTextController _cardNumberController =
       MaskedTextController(mask: '0000 0000 0000 0000');
   final TextEditingController _expiryDateController =
-      MaskedTextController(mask: '00/0000');
+      MaskedTextController(mask: '00/00');
   final TextEditingController _cardHolderNameController =
       TextEditingController();
   final TextEditingController _cvvCodeController =
