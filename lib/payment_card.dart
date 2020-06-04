@@ -102,11 +102,12 @@ class CardUtils {
     // 1. The year is in the past. In that case, we just assume that the month
     // has passed
     // 2. Card's month (plus another month) is more than current month.
-    return hasYearPassed(year) || year == now.year && (month < now.month + 1);
+    return hasYearPassed(year) ||
+        convertYearTo4Digits(year) == now.year && (month < now.month + 1);
   }
 
   static bool hasYearPassed(int year) {
-    int fourDigitsYear = year;
+    int fourDigitsYear = convertYearTo4Digits(year);
     var now = DateTime.now();
     // The year has passed if the year we are currently is more than card's
     // year
